@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\pickupstraight.js">
+    <Files>
+      <File FileName="Assets\conveyerpusherYaxis.js" Line="3" Column="1" />
+      <File FileName="Assets\pickupstraight.js" Line="23" Column="7" />
+      <File FileName="Assets\conveyerForward.js" Line="59" Column="107" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

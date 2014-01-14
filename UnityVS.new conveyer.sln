@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.0
+# Visual Studio 2010
+Project("{1FAC5C55-277D-4884-94A4-83DBDAF57E56}") = "UnityVS.new conveyer.UnityScript", "UnityVS.new conveyer.UnityScript.unityproj", "{8EA2C550-F06B-D9F0-FA28-0AD03C00CB57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.new conveyer.CSharp", "UnityVS.new conveyer.CSharp.csproj", "{0EF00B48-3B76-8181-ADC5-4526227759E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EA2C550-F06B-D9F0-FA28-0AD03C00CB57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA2C550-F06B-D9F0-FA28-0AD03C00CB57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA2C550-F06B-D9F0-FA28-0AD03C00CB57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EA2C550-F06B-D9F0-FA28-0AD03C00CB57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EF00B48-3B76-8181-ADC5-4526227759E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF00B48-3B76-8181-ADC5-4526227759E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF00B48-3B76-8181-ADC5-4526227759E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF00B48-3B76-8181-ADC5-4526227759E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
