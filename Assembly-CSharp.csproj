@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{C6D5694D-F672-0567-8E16-89CD69B959E8}</ProjectGuid>
+	<ProjectGuid>{A63347A9-5D20-CD85-9FA4-B3B4201C6B7B}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\ArrowViews.cs" />
+     <Compile Include="Assets\BMAInput.cs" />
      <Compile Include="Assets\Bag.cs" />
      <Compile Include="Assets\ClickDiverterSwitch.cs" />
      <Compile Include="Assets\ClickDiverterSwitchRight.cs" />
@@ -70,6 +71,7 @@
      <Compile Include="Assets\SimpleRNG.cs" />
      <Compile Include="Assets\UserConnection.cs" />
      <Compile Include="Assets\VerticalDiverter.cs" />
+     <Compile Include="Assets\WindowButtons.cs" />
      <Compile Include="Assets\conveyerForward.cs" />
      <Compile Include="Assets\conveyerTurn.cs" />
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
@@ -94,9 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{6773E56D-1381-057B-9032-0C35BDBADEAB}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{A6075445-2498-2650-F38D-35CF7CCFF93E}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
-      <Project>{7A456539-0D64-6AAF-B1EC-6748FF672E47}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
+      <Project>{3D7E5A71-C6F2-8D50-C8D7-6ACC6F0E7F68}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

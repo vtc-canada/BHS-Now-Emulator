@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class conveyerForward : MonoBehaviour {
 	
@@ -11,6 +12,7 @@ public class conveyerForward : MonoBehaviour {
 	public bool release_fixed_box_height = false; // release_fixed_box_height
 	public bool set_fixed_box_height = false;	
 	public float fixed_box_height_value = 0; // setting_fixed_box_height_values
+	public bool is_incline = false;
 	private int GUIopen = 0; // GUI_open
 	private Rect windowRect;
 	private int windowID=1;
@@ -28,6 +30,11 @@ public class conveyerForward : MonoBehaviour {
 	public string IO_name_motor_speed = null;
 	public string IO_name_estop_circuit = null;
 	public string IO_name_disconnect = null;
+	
+	private float static_friction = 0.2f;  //0.2f
+	private float dynamic_friction = 0.5f; // 0.5f
+	
+	private List<GameObject> kinbags = new List<GameObject>();
 	
 		
 	// Use this for initialization
@@ -51,12 +58,16 @@ public class conveyerForward : MonoBehaviour {
 				gameObject.renderer.material.color= Color.cyan;
 				gameObject.collider.material.staticFriction = 0f;
 				gameObject.collider.material.dynamicFriction = 0f;
+				if(is_incline)
+				{
+					ReleaseKinematicBags();
+				}
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.magenta;
-				gameObject.collider.material.staticFriction = .2f;
-				gameObject.collider.material.dynamicFriction = .5f;
+				gameObject.collider.material.staticFriction = static_friction;
+				gameObject.collider.material.dynamicFriction = dynamic_friction;
 			}
 			
 		}
@@ -67,12 +78,16 @@ public class conveyerForward : MonoBehaviour {
 				gameObject.renderer.material.color= Color.green;
 				gameObject.collider.material.staticFriction = 0f;
 				gameObject.collider.material.dynamicFriction = 0f;
+				if(is_incline)
+				{
+					ReleaseKinematicBags();
+				}
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.red;
-				gameObject.collider.material.staticFriction = .2f;
-				gameObject.collider.material.dynamicFriction = .5f;
+				gameObject.collider.material.staticFriction = static_friction;
+				gameObject.collider.material.dynamicFriction = dynamic_friction;
 			}	
 		}
 	}
@@ -128,16 +143,21 @@ public class conveyerForward : MonoBehaviour {
 		{
 			if(speed<0.001)
 			{
-				gameObject.collider.material.staticFriction = .2f;
-				gameObject.collider.material.dynamicFriction = .5f;
+				gameObject.collider.material.staticFriction = static_friction;
+				gameObject.collider.material.dynamicFriction = dynamic_friction;
 			}
 			else
 			{
 				gameObject.collider.material.staticFriction = 0f;
 				gameObject.collider.material.dynamicFriction = 0f;
+				if(is_incline)
+				{
+					ReleaseKinematicBags();
+				}
 			}
 				
 			gameObject.renderer.material.color= Color.blue;
+			
 		}else{ //or restore it back to how it should be
 			speed = orig_speed_backup;
 			setBeltColor();	
@@ -154,6 +174,23 @@ public class conveyerForward : MonoBehaviour {
 		else{
 			GUIopen=1;
 		}
+	}
+	
+	void ReleaseKinematicBags(){
+		//if(((this.running||override_speed)&&excel_override==false)||(excel_override&&excel_val)){
+		//	return;
+		//}
+		foreach(GameObject rb in kinbags)
+		{
+			try{
+				rb.rigidbody.isKinematic = false;	
+				rb.rigidbody.velocity = transform.right*.0001f;
+			}catch(UnityException exc)
+			{
+				Debug.Log("kinematic release fault");	
+			}
+		}
+		kinbags = new List<GameObject>();
 	}
 	
 	
@@ -196,7 +233,18 @@ public class conveyerForward : MonoBehaviour {
 			//if the ray from the box that is hitting something, is actually hitting US (the conveyer)
 			if(hit.collider==gameObject.collider)
 			{
-								
+				if(is_incline&&tempspeed==0)
+				{			
+					
+					rigidbody.isKinematic = true;
+					kinbags.Add(collision.gameObject);
+					Debug.Log("in 0");
+					
+					
+					return;
+				}
+				
+				
 				// This section is responsible for attempting to constrain the y axis of the bag.
 				// It makes sure that the bag is on the belt(from above) and that it's rotations have "steadied" out.
 				// It will eventually make it into here early on as it continually collides with the belt.

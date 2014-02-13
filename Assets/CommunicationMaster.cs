@@ -123,6 +123,12 @@ public class CommunicationMaster : MonoBehaviour {
 	bool[] photoeye_excel_override;
 	bool[] photoeye_excel_val;
 	
+	
+	BMAInput[] bmas;
+	int[] bma_OK_io;
+	int[] bma_OOG_io;
+	
+	
 	BitArray emu_to_plc_bits;
 	private int lasttrigger =0;
 	private bool loggingenabled = false;
@@ -196,6 +202,7 @@ public class CommunicationMaster : MonoBehaviour {
 		int vsu_up_prox_count = 0;
 		int vsu_down_prox_count =0;
 		int cs_button_input_count = 0; //pressed or not
+		int bma_count = 0;
 		foreach (object o in obj)
 		{
 			GameObject g = (GameObject) o;
@@ -248,6 +255,11 @@ public class CommunicationMaster : MonoBehaviour {
 				if(emu_to_plc.ContainsKey(g.GetComponent<Control_station_button>().IO_input))
 				{
 					cs_button_input_count ++;
+				}
+			}else if(g.GetComponent<BMAInput>()!=null){
+				if(emu_to_plc.ContainsKey(g.GetComponent<BMAInput>().IO_name_BMA_OK))
+				{
+					bma_count ++;
 				}
 			}
 		}
@@ -324,6 +336,13 @@ public class CommunicationMaster : MonoBehaviour {
 		cs_button_input = new Control_station_button[cs_button_input_count];
 		cs_button_input_io = new int[cs_button_input_count];
 		cs_button_input_count = 0;
+		
+		
+		
+		bmas = new BMAInput[bma_count];
+		bma_OK_io = new int[bma_count];
+		bma_OOG_io = new int[bma_count];
+		bma_count =0;
 		
 		
 		foreach (object o in obj)
@@ -409,6 +428,14 @@ public class CommunicationMaster : MonoBehaviour {
 					cs_button_input[cs_button_input_count] = g.GetComponent<Control_station_button>();
 					cs_button_input_io[cs_button_input_count] = emu_to_plc[cs_button_input[cs_button_input_count].IO_input];
 					cs_button_input_count ++;
+				}
+			}else if(g.GetComponent<BMAInput>()!=null){
+				if(emu_to_plc.ContainsKey(g.GetComponent<BMAInput>().IO_name_BMA_OK))
+				{
+					bmas[bma_count] = g.GetComponent<BMAInput>();
+					bma_OK_io[bma_count] = emu_to_plc[bmas[bma_count].IO_name_BMA_OK];
+					bma_OOG_io[bma_count] = emu_to_plc[bmas[bma_count].IO_name_BMA_OOG];
+					bma_count ++;
 				}
 			}
 		}
@@ -1181,6 +1208,11 @@ public class CommunicationMaster : MonoBehaviour {
 				{
 					emu_to_plc_bits[cs_button_input_io[i]] = cs_button_input[i].getState();
 				}
+				for(var i=0;i<bmas.Length;i++)
+				{
+					emu_to_plc_bits[bma_OK_io[i]] = bmas[i].getBMA_OK();
+					emu_to_plc_bits[bma_OOG_io[i]] = bmas[i].getBMA_OOG();
+				}
 				sendResponse(sender,emu_to_plc_bits,temptrigger.ToString());
 				
 			});
@@ -1223,6 +1255,11 @@ public class CommunicationMaster : MonoBehaviour {
 				for(var i=0;i<cs_button_input.Length;i++)
 				{
 					emu_to_plc_bits[cs_button_input_io[i]] = cs_button_input[i].getState();
+				}
+				for(var i=0;i<bmas.Length;i++)
+				{
+					emu_to_plc_bits[bma_OK_io[i]] = bmas[i].getBMA_OK();
+					emu_to_plc_bits[bma_OOG_io[i]] = bmas[i].getBMA_OOG();
 				}
 			});			
 			sendResponse(sender,emu_to_plc_bits,temptrigger.ToString());
@@ -1312,6 +1349,11 @@ public class CommunicationMaster : MonoBehaviour {
 		for(var i=0;i<cs_button_input.Length;i++)
 		{
 			emu_to_plc_bits[cs_button_input_io[i]] = cs_button_input[i].getState();
+		}
+		for(var i=0;i<bmas.Length;i++)
+		{
+			emu_to_plc_bits[bma_OK_io[i]] = bmas[i].getBMA_OK();
+			emu_to_plc_bits[bma_OOG_io[i]] = bmas[i].getBMA_OOG();
 		}
 		
 	}

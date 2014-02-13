@@ -17,6 +17,18 @@ public class PhotoEye : MonoBehaviour {
 	private bool excel_override = false;
 	private bool excel_val = false;
 	
+	private bool risingedge = false;
+	private bool risinglatch = false;
+	
+	public bool checkTrigger(){
+		if(risingedge)
+		{
+			risingedge = false;
+			return true;
+		}
+		return false;
+	}
+	
 	void Start () {
 		//splitcount = divertdenominator;
 		/*System.Data.DataTable dTable = GetModuleData();
@@ -81,6 +93,12 @@ public class PhotoEye : MonoBehaviour {
 		//Debug.DrawRay(transform.position, -transform.forward);//new Vector3(0,0,-1));
         if ((Physics.Raycast(photoray, out hit, 2.8f)&&!excel_override)||(excel_override&&!excel_val))
 		{
+			if(risinglatch==false)
+			{
+				risinglatch = true;
+				risingedge =true;
+			}
+			
 			if(excel_override)
 			{
 				gameObject.renderer.material.color = Color.magenta;
@@ -142,6 +160,7 @@ public class PhotoEye : MonoBehaviour {
 		}
 		else
 		{
+			risinglatch = false;
 			if(excel_override)
 			{
 				gameObject.renderer.material.color = Color.black;

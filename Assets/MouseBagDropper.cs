@@ -16,6 +16,9 @@ public class MouseBagDropper : MonoBehaviour {
 	public float bagnodecision = 5;
 	public float bagclear = 80;
 	
+	
+	private float bag_static_friction = 0f;//0.1f;
+	private float bag_dynamic_friction = 0f;//0.1f;
 	// Use this for initialization
 	void Start () {
 	
@@ -63,9 +66,12 @@ public class MouseBagDropper : MonoBehaviour {
 						//	cube.rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 						//}
 						cube.rigidbody.angularDrag = Mathf.Infinity;
+						
 						//cube.rigidbody.mass = 10;
-						cube.collider.material.dynamicFriction = 0;
-						cube.collider.material.staticFriction = 0;
+						
+						
+						cube.collider.material.dynamicFriction = bag_dynamic_friction;
+						cube.collider.material.staticFriction = bag_static_friction;
 						cube.gameObject.AddComponent<Bag>();
 						cube.gameObject.AddComponent<DragRigidbody>();
 						
