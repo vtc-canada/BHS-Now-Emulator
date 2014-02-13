@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MouseBagDropper : MonoBehaviour {
 	
-	private enum bagtype { Clear, Alarmed, NoDecision }
+	private enum security_status_type { Clear, Alarmed, Error, Pending, Unscanned }
 	
 	private float lastbagdrop = 0;	
 	private float delay =0.25f;
@@ -12,8 +12,9 @@ public class MouseBagDropper : MonoBehaviour {
 	public float bagwidth = 16f;
 	public float bagheight = 12f;
 	
-	public float bagalarmed = 15;
-	public float bagnodecision = 5;
+	public float bagalarmed = 10;
+	public float bagerror = 5;
+	public float bagpending = 5;
 	public float bagclear = 80;
 	
 	
@@ -75,19 +76,25 @@ public class MouseBagDropper : MonoBehaviour {
 						cube.gameObject.AddComponent<Bag>();
 						cube.gameObject.AddComponent<DragRigidbody>();
 						
-						float chosentype = Random.Range(0,bagalarmed+bagnodecision+bagclear);
+						/*
+						float chosentype = Random.Range(0,bagalarmed+bagpending+bagerror+bagclear);
 						if(chosentype <bagalarmed)
 						{
-							cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Alarmed;
+							cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Alarmed;
 						}
-						else if(chosentype <bagalarmed+bagnodecision)
+						else if(chosentype <bagalarmed+bagpending)
 						{
-							cube.gameObject.GetComponent<Bag>().type = (int)bagtype.NoDecision;
+							cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Pending;
+						}
+						else if(chosentype <bagalarmed+bagpending+bagerror)
+						{
+							cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Error;
 						}
 						else
 						{
-							cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Clear;
+							cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Clear;
 						}
+						*/
 				    	Debug.Log ("Dropped bag : " + hit.collider.gameObject.name);
 					}
 				}

@@ -2,22 +2,27 @@
 using System.Collections;
 
 public class EDSDecision : MonoBehaviour {
-	private enum bagtype { Clear, Alarmed, NoDecision }
+	private enum security_status_type { Clear, Alarmed, Error, Pending, Unscanned }
 	
+	/*
 	void OnTriggerEnter (Collider collision) {
-		if(collision.gameObject.GetComponent<Bag>().type == (int)bagtype.Clear)
+		if(collision.gameObject.GetComponent<Bag>().security_status == (int)security_status_type.Clear)
 		{
 			collision.gameObject.renderer.material.color = Color.green;
 		}
-		else if(collision.gameObject.GetComponent<Bag>().type == (int)bagtype.Alarmed)
+		else if(collision.gameObject.GetComponent<Bag>().security_status == (int)security_status_type.Error)
 		{
 			collision.gameObject.renderer.material.color = Color.red;
 		}
-		else if(collision.gameObject.GetComponent<Bag>().type == (int)bagtype.NoDecision)
+		else if(collision.gameObject.GetComponent<Bag>().security_status == (int)security_status_type.Alarmed)
+		{
+			collision.gameObject.renderer.material.color = Color.red;
+		}
+		else if(collision.gameObject.GetComponent<Bag>().security_status == (int)security_status_type.Pending)
 		{
 			collision.gameObject.renderer.material.color = Color.yellow;
 		}
 	
 	
-	}
+	}*/
 }

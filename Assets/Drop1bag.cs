@@ -3,13 +3,14 @@ using System.Collections;
 
 public class Drop1bag : MonoBehaviour {
 	
-	private enum bagtype { Clear, Alarmed, NoDecision }
+	private enum security_status_type { Clear, Alarmed,  Error, Pending, Unscanned }
 	public float startx = -0.5f;
 	public float startz = 11.5f;
 	public float starty = 0.22f;
-	public float bagalarmed = 15;
-	public float bagnodecision = 5;
+	public float bagalarmed = 10;
+	public float bagpending = 5;
 	public float bagclear = 80;
+	public float bagerror = 5;
 	
 	// Use this for initialization
 	void Start () {
@@ -37,20 +38,24 @@ public class Drop1bag : MonoBehaviour {
 		cube.gameObject.AddComponent<Bag>();
 		cube.gameObject.AddComponent<DragRigidbody>();
 		
-		float chosentype = Random.Range(0,bagalarmed+bagnodecision+bagclear);
+		
+		/*float chosentype = Random.Range(0,bagalarmed+bagpending+bagerror+bagclear);
 		if(chosentype <bagalarmed)
 		{
-			cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Alarmed;
+			cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Alarmed;
 		}
-		else if(chosentype <bagalarmed+bagnodecision)
+		else if(chosentype <bagalarmed+bagpending)
 		{
-			cube.gameObject.GetComponent<Bag>().type = (int)bagtype.NoDecision;
+			cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Pending;
+		}
+		else if(chosentype <bagalarmed+bagpending+bagerror)
+		{
+			cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Error;
 		}
 		else
 		{
-			cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Clear;
-		}
-		
+			cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Clear;
+		}*/
 		
 	}
 }

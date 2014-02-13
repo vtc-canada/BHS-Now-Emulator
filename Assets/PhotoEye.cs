@@ -7,7 +7,10 @@ using System.Data.Odbc;
 public class PhotoEye : MonoBehaviour {
 
 	// Use this for initialization
-	private enum bagtype { Clear, Alarmed, NoDecision }
+	private enum security_status_type { Clear, Alarmed, Error, Pending, Unscanned }
+	public int set_bag_security_status = (int)security_status_type.Unscanned;
+	
+	
 	private bool enabled = true;
 	//private int statechanged = false;
 	private bool laststate = false;	
@@ -20,6 +23,18 @@ public class PhotoEye : MonoBehaviour {
 	private bool risingedge = false;
 	private bool risinglatch = false;
 	
+	
+	public bool IO_assign_bag_enabled = false;
+	public string IO_assign_bag_clear = "";
+	public string IO_assign_bag_alarmed = "";
+	public string IO_assign_bag_pending = "";
+	
+	
+	
+	private bool bag_clear = false; //green
+	private bool bag_alarmed = false; //red
+	private bool bag_pending = false;  //blue
+	
 	public bool checkTrigger(){
 		if(risingedge)
 		{
@@ -28,6 +43,72 @@ public class PhotoEye : MonoBehaviour {
 		}
 		return false;
 	}
+	
+	/*void setSecurityStatusAssigner(int status)
+	{
+		this.set_bag_security_status = status;	
+	}*/
+	
+	public void setAssignClear(bool security_state_value)
+	{
+		if(security_state_value)
+		{
+			
+			Debug.Log("SS state CLEAR");
+			this.set_bag_security_status = (int)security_status_type.Clear;
+		}
+		else if(this.set_bag_security_status == (int)security_status_type.Clear)
+		{
+			Debug.Log("SS state Unscanned");
+			this.set_bag_security_status = (int)security_status_type.Unscanned;
+		}
+	}	
+	public void setAssignAlarmed(bool security_state_value)
+	{
+		if(security_state_value)
+		{
+			
+			Debug.Log("SS state ALARMED");
+			this.set_bag_security_status = (int)security_status_type.Alarmed;
+		}
+		else if(this.set_bag_security_status == (int)security_status_type.Alarmed)
+		{
+			Debug.Log("SS state Unscanned");
+			this.set_bag_security_status = (int)security_status_type.Unscanned;
+		}
+	}
+	public void setAssignPending(bool security_state_value)
+	{
+		if(security_state_value)
+		{
+			Debug.Log("SS state PENDING");
+			this.set_bag_security_status = (int)security_status_type.Pending;
+		}
+		else if(this.set_bag_security_status == (int)security_status_type.Pending)
+		{
+			Debug.Log("SS state Unscanned");
+			this.set_bag_security_status = (int)security_status_type.Unscanned;
+		}
+	}
+	
+	/*
+	void setBagClear(bool clear)
+	{
+		this.bag_clear = clear;
+	}
+	void setBagAlarmed(bool alarmed)
+	{
+		this.bag_alarmed =alarmed;
+	}
+	void setBagPending(bool pending)
+	{
+		this.bag_pending = pending;
+	}
+	void setBagError(bool pending)
+	{
+		this.bag_pending = pending;
+	}*/
+	
 	
 	void Start () {
 		//splitcount = divertdenominator;
@@ -90,6 +171,14 @@ public class PhotoEye : MonoBehaviour {
 		RaycastHit hit;
        
 		Ray photoray = new Ray(transform.position-transform.forward*0.15f,-transform.forward);
+		
+		/// assign bag color
+		if(IO_assign_bag_enabled&&Physics.Raycast(photoray, out hit, 2.8f))
+		{
+			hit.collider.gameObject.GetComponent<Bag>().primeSecurityStatus(set_bag_security_status);
+			
+		}
+		
 		//Debug.DrawRay(transform.position, -transform.forward);//new Vector3(0,0,-1));
         if ((Physics.Raycast(photoray, out hit, 2.8f)&&!excel_override)||(excel_override&&!excel_val))
 		{
@@ -128,11 +217,11 @@ public class PhotoEye : MonoBehaviour {
 			if(togglevertical!="")
 			{
 				GameObject verticaldiverter = GameObject.Find(togglevertical);
-				if(hit.collider.gameObject.GetComponent<Bag>().type == (int)bagtype.Alarmed)
+				if(hit.collider.gameObject.GetComponent<Bag>().type == (int)security_status_type.Alarmed)
 				{
 					verticaldiverter.GetComponent<VerticalDiverter>().diverteron = 0; 
 				}
-				else if(hit.collider.gameObject.GetComponent<Bag>().type == (int)bagtype.NoDecision)
+				else if(hit.collider.gameObject.GetComponent<Bag>().type == (int)security_status_type.NoDecision)
 				{
 					verticaldiverter.GetComponent<VerticalDiverter>().diverteron = 0; 
 				}

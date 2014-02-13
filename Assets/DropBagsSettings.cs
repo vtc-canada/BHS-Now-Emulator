@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DropBagsSettings : MonoBehaviour {
 	
-	private enum bagtype { Clear, Alarmed, NoDecision }
+	private enum security_status_type { Clear, Alarmed, Error, Pending, Unscanned }
 	private int GUIopen = 0;
 	private Rect windowRect;
 	public string devicename = "1";
@@ -22,8 +22,9 @@ public class DropBagsSettings : MonoBehaviour {
 	public float startx = -0.5f;
 	public float startz = 11.5f;
 	public float starty = 0.22f;
-	public float bagalarmed = 15;
-	public float bagnodecision = 5;
+	public float bagalarmed = 10;
+	public float bagerror = 5;
+	public float bagpending = 5;
 	public float bagclear = 80;
 	public bool constrainY = true;
 	public float startAngle = 0;
@@ -86,14 +87,19 @@ public class DropBagsSettings : MonoBehaviour {
 	  	GUI.Label(new Rect (5, 225, 75, 20),"Bag Alarmed");	 	
 	  	bagalarmed = GUI.HorizontalSlider (new Rect (100, 230, 115, 30), bagalarmed, 0f, 100f);
 	  	GUI.Label(new Rect (220, 225, 50, 20),(bagalarmed).ToString());
+		
+		GUI.Label(new Rect (5, 255, 75, 20),"Bag Error");	 	
+	  	bagerror = GUI.HorizontalSlider (new Rect (100, 260, 115, 30), bagerror, 0f, 100f);
+	  	GUI.Label(new Rect (220, 255, 50, 20),(bagerror).ToString());
 	  	
-	  	GUI.Label(new Rect (5, 255, 75, 20),"Bag No Decision");	 	
-	  	bagnodecision = GUI.HorizontalSlider (new Rect (100, 260, 115, 30), bagnodecision, 0f, 100f);
-	  	GUI.Label(new Rect (220, 255, 50, 20),(bagnodecision).ToString());
+	  	GUI.Label(new Rect (5, 285, 75, 20),"Bag Pending");	 	
+	  	bagpending = GUI.HorizontalSlider (new Rect (100, 290, 115, 30), bagpending, 0f, 100f);
+	  	GUI.Label(new Rect (220, 285, 50, 20),(bagpending).ToString());
 	  	
-	  	GUI.Label(new Rect (5, 285, 75, 20),"Bag Clear");	 	
-	  	bagclear = GUI.HorizontalSlider (new Rect (100, 290, 115, 30), bagclear, 0f, 100f);
-	  	GUI.Label(new Rect (220, 285, 50, 20),(bagclear).ToString());
+	  	GUI.Label(new Rect (5, 315, 75, 20),"Bag Clear");	 	
+	  	bagclear = GUI.HorizontalSlider (new Rect (100, 320, 115, 30), bagclear, 0f, 100f);
+	  	GUI.Label(new Rect (220, 315, 50, 20),(bagclear).ToString());
+		
 	  	
 	  	//overridespeed = GUI.Toggle(new Rect(5, 35, 150, 30), overridespeed, "Override Speed");
 	//  	if(overridespeed)
@@ -177,19 +183,25 @@ public class DropBagsSettings : MonoBehaviour {
 			
 			cube.gameObject.AddComponent<Bag>();
 			cube.gameObject.AddComponent<DragRigidbody>();
-			float chosentype = Random.Range(0,bagalarmed+bagnodecision+bagclear);
+			
+			/*
+			float chosentype = Random.Range(0,bagalarmed+bagpending+bagerror+bagclear);
 			if(chosentype <bagalarmed)
 			{
-				cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Alarmed;
+				cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Alarmed;
 			}
-			else if(chosentype <bagalarmed+bagnodecision)
+			else if(chosentype <bagalarmed+bagpending)
 			{
-				cube.gameObject.GetComponent<Bag>().type = (int)bagtype.NoDecision;
+				cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Pending;
+			}
+			else if(chosentype <bagalarmed+bagpending+bagerror)
+			{
+				cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Error;
 			}
 			else
 			{
-				cube.gameObject.GetComponent<Bag>().type = (int)bagtype.Clear;
-			}
+				cube.gameObject.GetComponent<Bag>().security_status = (int)security_status_type.Clear;
+			}*/
 			
 			//Debug.Log("droppin");
 			lastupdate = Time.time;

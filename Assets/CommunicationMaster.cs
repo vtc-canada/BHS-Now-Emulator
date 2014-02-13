@@ -113,7 +113,18 @@ public class CommunicationMaster : MonoBehaviour {
 	Control_station_button[] cs_button_input;//button pressing
 	int[] cs_button_input_io;
 	
- 
+	PhotoEye[] pe_assign_security_clear; //photoeyeassigns
+	bool[] pe_assign_security_clear_state;
+	bool[] pe_assign_security_clear_laststate;
+	int[] pe_assign_security_clear_io;
+ 	PhotoEye[] pe_assign_security_alarmed;
+	bool[] pe_assign_security_alarmed_state;
+	bool[] pe_assign_security_alarmed_laststate;
+	int[] pe_assign_security_alarmed_io;
+	PhotoEye[] pe_assign_security_pending;
+	bool[] pe_assign_security_pending_state;
+	bool[] pe_assign_security_pending_laststate;
+	int[] pe_assign_security_pending_io;
 	
 	Dictionary<string,int> emu_to_plc;
 	int max_emu_to_plc_io;
@@ -339,6 +350,7 @@ public class CommunicationMaster : MonoBehaviour {
 		
 		
 		
+		
 		bmas = new BMAInput[bma_count];
 		bma_OK_io = new int[bma_count];
 		bma_OOG_io = new int[bma_count];
@@ -453,6 +465,14 @@ public class CommunicationMaster : MonoBehaviour {
 		int hsd_cycle_count=0;
 		int vsu_cycle_count = 0;
 		int cs_button_output_count = 0;
+		int pe_assign_security_clear_count= 0;
+		int pe_assign_security_alarmed_count= 0;
+		int pe_assign_security_pending_count= 0;
+		
+			
+			
+			
+			
 		foreach (object o in obj)
 		{
 			GameObject g = (GameObject) o;
@@ -495,6 +515,21 @@ public class CommunicationMaster : MonoBehaviour {
 				if(plc_to_emu.ContainsKey(g.GetComponent<Control_station_button>().IO_output))
 				{
 					cs_button_output_count++;
+				}
+			}
+			else if(g.GetComponent<PhotoEye>()!=null)
+			{
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_clear))
+				{
+					pe_assign_security_clear_count++;
+				}
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_alarmed))
+				{
+					pe_assign_security_alarmed_count++;
+				}
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_pending))
+				{
+					pe_assign_security_pending_count++;
 				}
 			}
 		}
@@ -553,7 +588,21 @@ public class CommunicationMaster : MonoBehaviour {
 		cs_button_output_count=0;
 		
 		
-		
+		pe_assign_security_clear = new PhotoEye[pe_assign_security_clear_count]; //photoeyeassigns
+		pe_assign_security_clear_state = new bool[pe_assign_security_clear_count];
+		pe_assign_security_clear_laststate = new bool[pe_assign_security_clear_count];		
+		pe_assign_security_clear_io = new int[pe_assign_security_clear_count];
+		pe_assign_security_clear_count = 0;
+ 		pe_assign_security_alarmed = new PhotoEye[pe_assign_security_alarmed_count];
+		pe_assign_security_alarmed_state = new bool[pe_assign_security_alarmed_count];
+		pe_assign_security_alarmed_laststate = new bool[pe_assign_security_alarmed_count];
+		pe_assign_security_alarmed_io = new int[pe_assign_security_alarmed_count];
+		pe_assign_security_alarmed_count = 0;
+		pe_assign_security_pending = new PhotoEye[pe_assign_security_pending_count];
+		pe_assign_security_pending_state = new bool[pe_assign_security_pending_count];
+		pe_assign_security_pending_laststate = new bool[pe_assign_security_pending_count];
+		pe_assign_security_pending_io = new int[pe_assign_security_pending_count];
+		pe_assign_security_pending_count = 0;
 		
 		foreach (object o in obj)
 		{
@@ -616,8 +665,29 @@ public class CommunicationMaster : MonoBehaviour {
 					cs_button_output_io[cs_button_output_count] = plc_to_emu[cs_button_output[cs_button_output_count].IO_output];
 					cs_button_output_count ++;
 				}
+			}else if(g.GetComponent<PhotoEye>()!=null) // Assumes all states are false to start.
+			{
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_clear))
+				{
+					pe_assign_security_clear[pe_assign_security_clear_count] = g.GetComponent<PhotoEye>();
+					pe_assign_security_clear_io[pe_assign_security_clear_count] = plc_to_emu[pe_assign_security_clear[pe_assign_security_clear_count].IO_assign_bag_clear];
+					pe_assign_security_clear_count++;
+				}
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_alarmed))
+				{
+					pe_assign_security_alarmed[pe_assign_security_alarmed_count] = g.GetComponent<PhotoEye>();
+					pe_assign_security_alarmed_io[pe_assign_security_alarmed_count] = plc_to_emu[pe_assign_security_clear[pe_assign_security_alarmed_count].IO_assign_bag_alarmed];
+					pe_assign_security_alarmed_count++;
+				}
+				if(plc_to_emu.ContainsKey(g.GetComponent<PhotoEye>().IO_assign_bag_pending))
+				{
+					pe_assign_security_pending[pe_assign_security_pending_count] = g.GetComponent<PhotoEye>();
+					pe_assign_security_pending_io[pe_assign_security_pending_count] = plc_to_emu[pe_assign_security_pending[pe_assign_security_pending_count].IO_assign_bag_pending];
+					pe_assign_security_pending_count++;
+				}
 			}
 		}
+		
 			
 		
 		
@@ -818,8 +888,7 @@ public class CommunicationMaster : MonoBehaviour {
 		
 		for(var i=0; i<byte_io_enabled.Length;i++)
 		{
-			excel_to_emu_bit_string += byte_io_enabled[i].ToString()+ " ";
-			
+			excel_to_emu_bit_string += byte_io_enabled[i].ToString()+ " ";			
 		}
 		//Debug.Log("byte_io_enabled:" + excel_to_emu_bit_string + "\r\n Length:"+byte_io_enabled.Length.ToString()+"\r\n");
 		
@@ -1048,7 +1117,28 @@ public class CommunicationMaster : MonoBehaviour {
 				cs_button_output_state[i]=(bool)iovals[cs_button_output_io[i]];
 			}
 		}
-		
+		for(var i=0;i<pe_assign_security_clear.Length;i++)
+		{
+			if((bool)iovals[pe_assign_security_clear_io[i]] != pe_assign_security_clear_state[i]) // The STATE HAS CHANGED!!
+			{
+				//Debug.Log ("changed Clear val");
+				pe_assign_security_clear_state[i]=(bool)iovals[pe_assign_security_clear_io[i]];
+			}
+		}
+		for(var i=0;i<pe_assign_security_alarmed.Length;i++)
+		{
+			if((bool)iovals[pe_assign_security_alarmed_io[i]] != pe_assign_security_alarmed_state[i]) // The STATE HAS CHANGED!!
+			{
+				pe_assign_security_alarmed_state[i]=(bool)iovals[pe_assign_security_alarmed_io[i]];
+			}
+		}
+		for(var i=0;i<pe_assign_security_pending.Length;i++)
+		{
+			if((bool)iovals[pe_assign_security_pending_io[i]] != pe_assign_security_pending_state[i]) // The STATE HAS CHANGED!!
+			{
+				pe_assign_security_pending_state[i]=(bool)iovals[pe_assign_security_pending_io[i]];
+			}
+		}
 		
 		
 		
@@ -1104,12 +1194,34 @@ public class CommunicationMaster : MonoBehaviour {
 					cs_button_output_laststate[i] = cs_button_output_state[i];
 				}		
 			}
+			for(var i=0;i<pe_assign_security_clear.Length;i++)
+			{
+				if(pe_assign_security_clear_state[i] !=pe_assign_security_clear_laststate[i])
+				{
+					pe_assign_security_clear[i].setAssignClear(pe_assign_security_clear_state[i]);
+					pe_assign_security_clear_laststate[i] = pe_assign_security_clear_state[i];
+				}		
+			}
+			for(var i=0;i<pe_assign_security_alarmed.Length;i++)
+			{
+				if(pe_assign_security_alarmed_state[i] !=pe_assign_security_alarmed_laststate[i])
+				{
+					pe_assign_security_alarmed[i].setAssignAlarmed(pe_assign_security_alarmed_state[i]);
+					pe_assign_security_alarmed_laststate[i] = pe_assign_security_alarmed_state[i];
+				}		
+			}
+			for(var i=0;i<pe_assign_security_pending.Length;i++)
+			{
+				if(pe_assign_security_pending_state[i] !=pe_assign_security_pending_laststate[i])
+				{
+					pe_assign_security_pending[i].setAssignPending(pe_assign_security_pending_state[i]);
+					pe_assign_security_pending_laststate[i] = pe_assign_security_pending_state[i];
+				}		
+			}
+			
+			
+			
 		});
-		
-		
-		
-		
-		
 		
 		// copy over last state
 		
