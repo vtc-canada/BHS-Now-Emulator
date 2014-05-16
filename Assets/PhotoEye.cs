@@ -5,11 +5,14 @@ using System.Data;
 using System.Data.Odbc;
 
 public class PhotoEye : MonoBehaviour {
-
+	
+	private bool security_log_enabled = true;
+	
 	// Use this for initialization
 	private enum security_status_type { Clear, Alarmed, Error, Pending, Unscanned }
 	public int set_bag_security_status = (int)security_status_type.Unscanned;
 	
+	private GameObject connectedATR;
 	
 	private bool enabled = true;
 	//private int statechanged = false;
@@ -53,13 +56,18 @@ public class PhotoEye : MonoBehaviour {
 	{
 		if(security_state_value)
 		{
-			
-			Debug.Log("SS state CLEAR");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state CLEAR");
+			}
 			this.set_bag_security_status = (int)security_status_type.Clear;
 		}
 		else if(this.set_bag_security_status == (int)security_status_type.Clear)
 		{
-			Debug.Log("SS state Unscanned");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state Unscanned -clear");				
+			}
 			this.set_bag_security_status = (int)security_status_type.Unscanned;
 		}
 	}	
@@ -68,12 +76,18 @@ public class PhotoEye : MonoBehaviour {
 		if(security_state_value)
 		{
 			
-			Debug.Log("SS state ALARMED");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state ALARMED");
+			}
 			this.set_bag_security_status = (int)security_status_type.Alarmed;
 		}
 		else if(this.set_bag_security_status == (int)security_status_type.Alarmed)
 		{
-			Debug.Log("SS state Unscanned");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state Unscanned -alarmed");
+			}
 			this.set_bag_security_status = (int)security_status_type.Unscanned;
 		}
 	}
@@ -81,12 +95,18 @@ public class PhotoEye : MonoBehaviour {
 	{
 		if(security_state_value)
 		{
-			Debug.Log("SS state PENDING");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state PENDING");
+			}
 			this.set_bag_security_status = (int)security_status_type.Pending;
 		}
 		else if(this.set_bag_security_status == (int)security_status_type.Pending)
 		{
-			Debug.Log("SS state Unscanned");
+			if(security_log_enabled)
+			{
+				Debug.Log("SS state Unscanned -pending");
+			}
 			this.set_bag_security_status = (int)security_status_type.Unscanned;
 		}
 	}
@@ -109,6 +129,10 @@ public class PhotoEye : MonoBehaviour {
 		this.bag_pending = pending;
 	}*/
 	
+	public void ConnectATR(GameObject atrin)
+	{
+		this.connectedATR = atrin;
+	}
 	
 	void Start () {
 		//splitcount = divertdenominator;
@@ -172,6 +196,14 @@ public class PhotoEye : MonoBehaviour {
        
 		Ray photoray = new Ray(transform.position-transform.forward*0.15f,-transform.forward);
 		
+		// Communicates over the the ATR what the passing bag's IATA tag is.
+		if(Physics.Raycast(photoray, out hit, 2.8f))
+		{
+			if(connectedATR!=null)
+			{
+				connectedATR.GetComponent<ATRInput>().SetLastIATA(hit.collider.gameObject.GetComponent<Bag>().getIATA());
+			}
+		}
 		/// assign bag color
 		if(IO_assign_bag_enabled&&Physics.Raycast(photoray, out hit, 2.8f))
 		{
@@ -213,38 +245,6 @@ public class PhotoEye : MonoBehaviour {
 			        //D// your stuff
 			}
 
-			/*
-			if(togglevertical!="")
-			{
-				GameObject verticaldiverter = GameObject.Find(togglevertical);
-				if(hit.collider.gameObject.GetComponent<Bag>().type == (int)security_status_type.Alarmed)
-				{
-					verticaldiverter.GetComponent<VerticalDiverter>().diverteron = 0; 
-				}
-				else if(hit.collider.gameObject.GetComponent<Bag>().type == (int)security_status_type.NoDecision)
-				{
-					verticaldiverter.GetComponent<VerticalDiverter>().diverteron = 0; 
-				}
-				else
-				{
-					verticaldiverter.GetComponent<VerticalDiverter>().diverteron = 1; 
-				}
-				
-			}
-			if(laststate == false && toggleleft!="")
-			{
-				GameObject leftdiverter = GameObject.Find(toggleleft);
-				splitcount --;
-				if(splitcount ==0)
-				{
-					
-					leftdiverter.GetComponent<DiverterLeftC>().diverteron = 1; 
-					splitcount = divertdenominator;
-				}
-				else{					
-					leftdiverter.GetComponent<DiverterLeftC>().diverteron = 0; 					
-				}				
-			}*/
 			laststate = true;
 		}
 		else
@@ -277,25 +277,4 @@ public class PhotoEye : MonoBehaviour {
 			laststate = false;
 		}
 	}
-	
-	
-	private System.Data.DataTable GetModuleData()
-    {
-        var connString =  "Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=C:\\GDrive\\Google Drive\\Development\\Unity\\simulationconfig.xls;";   //string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\GDrive\\Google Drive\\Development\\Unity\\simulationconfig.xlsm;Extended Properties=""Excel 12.0 Macro;HDR=YES"";");
-        string SelectSQL = "select * from [PhotoEyes$]";// OFFSET "+top;//WHERE [rack]=1 AND [slot]=1";  //WHERE rack=1 AND WHERE slot=1
-        OdbcCommand dbCommand = null;
-        //OleDbDataAdapter dataAdapter = null;
-        System.Data.DataTable dTable = new DataTable("YourData");;
-        OdbcConnection  conn = null;
-
-        using(conn = new OdbcConnection (connString)){
-	        conn.Open();
-	        using(dbCommand = new OdbcCommand(SelectSQL.ToString(), conn))
-			{
-				OdbcDataReader rData = dbCommand.ExecuteReader();
-				dTable.Load(rData);
-			}
-		}
-        return dTable;
-    }
 }

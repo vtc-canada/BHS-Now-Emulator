@@ -14,6 +14,12 @@ using System.Linq;
 
 public class CommunicationMaster : MonoBehaviour {
 	
+//	const int[] debug_id = new int[1]{8};
+	
+	
+	public static List<string> IATA_tags = new List<string>();
+	
+	
 	const int PORT_NUM = 9319;	
     private Hashtable clients = new Hashtable();
     private TcpListener listener;
@@ -143,7 +149,7 @@ public class CommunicationMaster : MonoBehaviour {
 	BitArray emu_to_plc_bits;
 	private int lasttrigger =0;
 	private bool loggingenabled = false;
-	private bool debuglogenabled = true;
+	private bool debuglogenabled = false;
 	private bool ready = false;
 	
 	private bool getnewinputs = false;
@@ -151,7 +157,7 @@ public class CommunicationMaster : MonoBehaviour {
 	
 	private System.Data.DataTable GetModuleData()
     {
-        var connString =  "Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=C:\\GDrive\\Google Drive\\Development\\Unity\\simulationconfig.xls;";   //string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\GDrive\\Google Drive\\Development\\Unity\\simulationconfig.xlsm;Extended Properties=""Excel 12.0 Macro;HDR=YES"";");
+        var connString =  "Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=C:\\GDrive\\Development\\Excel Unity IATA tags\\ATR_IATA_tags.xls;";   //string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\GDrive\\Google Drive\\Development\\Unity\\simulationconfig.xlsm;Extended Properties=""Excel 12.0 Macro;HDR=YES"";");
         string SelectSQL = "select * from [IO$]";// OFFSET "+top;//WHERE [rack]=1 AND [slot]=1";  //WHERE rack=1 AND WHERE slot=1
         OdbcCommand dbCommand = null;
         //OleDbDataAdapter dataAdapter = null;
@@ -167,25 +173,23 @@ public class CommunicationMaster : MonoBehaviour {
 			}
 		}
         return dTable;
-    }
-	
+	}
 	
 	// Use this for initialization
 	void Start () {
+		Logger.WriteLine("[INFO]","STARTUP","",true);
 		
-		/*System.Data.DataTable dTable = GetModuleData();
-		
+		/*
+		System.Data.DataTable dTable = GetModuleData();
+		//IATA_tags = new List<string>();
 		if(dTable.Rows.Count > 0)		
 		{				
 		  for (int i = 0; i < dTable.Rows.Count; i++)	
 		  {	
-			//if(dTable.Rows[i]["DeviceName"].ToString() == devicename)			
-			//{
-			//	enabled = Convert.ToBoolean(dTable.Rows[i]["Enabled"]);
-			//}
-				//Debug.Log("here");
+			IATA_tags.Add(dTable.Rows[i]["IATA_tag"].ToString());
 		  }		
 		}*/
+		
 		
 		
 		object[] obj = GameObject.FindSceneObjectsOfType(typeof (GameObject));
@@ -198,7 +202,11 @@ public class CommunicationMaster : MonoBehaviour {
 		if(emu_to_plc == null)
 		{
 			Debug.Log("Unable to get IO data from mysqlconnection.dll. Check Database connectivity.");
+			Logger.WriteLine("[ERROR]","Initialization","Unable to get IO data from mysqlconnection.dll. Check Database connectivity.",true);
 			return;
+		}
+		else{
+			Logger.WriteLine("[INFO]","Initialization","Successfully retrieved config values from the database.",true);
 		}
 		
 		/////////////   EMU to PLC
@@ -1141,7 +1149,12 @@ public class CommunicationMaster : MonoBehaviour {
 		}
 		
 		
-		
+		int heartlog = Logger.counter++;
+		if(heartlog==100)
+		{
+			Logger.WriteLine("[INFO]","COM_SRV","Heartbeat",true);
+			Logger.counter = 0;
+		}
 		
 		// check if different.
 				
@@ -1150,6 +1163,14 @@ public class CommunicationMaster : MonoBehaviour {
 			{
 				if(conveyerstate[i] !=conveyerlaststate[i])
 				{
+					if(conveyer[i].GetType()!=System.Type.GetType("conveyerForward")){
+						
+					}
+					else if(conveyer[i]==null){
+						Logger.WriteLine("[FATAL]","COM_SRV","NULL FOUND!!!!  Somehow this reference has been lost!",true);
+						
+						//Debug.Log(						
+					}
 					conveyer[i].setState(conveyerstate[i]);
 					conveyerlaststate[i] = conveyerstate[i];
 				}		

@@ -32,7 +32,7 @@ public class DropBagsSettings : MonoBehaviour {
 
 	void Start () {
 		windowID = Random.Range(0,100000);
-		windowRect= new Rect (50, 50, 400, 400);
+		windowRect= new Rect (50, 50, 420, 400);
 		nextinterval = 	dropinterval;//(float)SimpleRNG.SimpleRNG.GetNormal((double)dropinterval,(double)(dropinterval/4));
 	}
 
@@ -45,7 +45,7 @@ public class DropBagsSettings : MonoBehaviour {
 	}
 
 	void WindowFunction (int windowID) {
-	    if (GUI.Button (new Rect (270, 0,30, 30), "X")) {
+	    if (GUI.Button (new Rect (390, 0,30, 30), "X")) {
 	    	GUIopen = 0;
 	  	}
 	 
@@ -54,51 +54,65 @@ public class DropBagsSettings : MonoBehaviour {
 	 
 	 	GUI.Label(new Rect (5, 65, 45, 20),"min-x:");
 	  	minlengthx = GUI.HorizontalSlider (new Rect (50, 70, 115, 30), minlengthx, 1f, 36f);
-	  	GUI.Label(new Rect (170, 65, 50, 20),(minlengthx/1f).ToString());
+	  	//GUI.Label(new Rect (170, 65, 50, 20),(minlengthx/1f).ToString());
+		minlengthx =  float.Parse(GUI.TextField(new Rect(170, 65, 30, 20),minlengthx.ToString()));
 	  	 
 	 	GUI.Label(new Rect (205, 65, 45, 20),"max-x:");	 	
 	  	maxlengthx = GUI.HorizontalSlider (new Rect (250, 70, 115, 30), maxlengthx, 1f, 36f);
-	  	GUI.Label(new Rect (370, 65, 50, 20),(maxlengthx/1f).ToString());
+	  	//GUI.Label(new Rect (370, 65, 50, 20),(maxlengthx/1f).ToString());
+		maxlengthx =  float.Parse(GUI.TextField(new Rect(370, 65, 30, 20),maxlengthx.ToString()));
 	  	
 	 	GUI.Label(new Rect (5, 95, 45, 20),"min-y:");
 	  	minlengthy = GUI.HorizontalSlider (new Rect (50, 100, 115, 30), minlengthy, 1f, 36f);
-	  	GUI.Label(new Rect (170, 95, 50, 20),(minlengthy/1f).ToString());
+	  	//GUI.Label(new Rect (170, 95, 50, 20),(minlengthy/1f).ToString());
+		minlengthy =  float.Parse(GUI.TextField(new Rect(170, 95, 30, 20),minlengthy.ToString()));
 	  	 
 	 	GUI.Label(new Rect (205, 95, 45, 20),"max-y:");	 	
 	  	maxlengthy = GUI.HorizontalSlider (new Rect (250, 100, 115, 30), maxlengthy, 1f, 36f);
-	  	GUI.Label(new Rect (370, 95, 50, 20),(maxlengthy/1f).ToString());
+	  	//GUI.Label(new Rect (370, 95, 50, 20),(maxlengthy/1f).ToString());
+		maxlengthy =  float.Parse(GUI.TextField(new Rect(370, 95, 30, 20),maxlengthy.ToString()));
 	  	
 	 	GUI.Label(new Rect (5, 125, 45, 20),"min-z:");
 	  	minlengthz = GUI.HorizontalSlider (new Rect (50, 130, 115, 30), minlengthz, 1f, 36f);
-	  	GUI.Label(new Rect (170, 125, 50, 20),(minlengthz/1f).ToString());
+	  	//GUI.Label(new Rect (170, 125, 50, 20),(minlengthz/1f).ToString());
+		minlengthz =  float.Parse(GUI.TextField(new Rect(170, 125, 30, 20),minlengthz.ToString()));
 	  	 
 	 	GUI.Label(new Rect (205, 125, 45, 20),"max-z:");	 	
 	  	maxlengthz = GUI.HorizontalSlider (new Rect (250, 130, 115, 30), maxlengthz, 1f, 36f);
-	  	GUI.Label(new Rect (370, 125, 50, 20),(maxlengthz/1f).ToString());
+	  	//GUI.Label(new Rect (370, 125, 50, 20),(maxlengthz/1f).ToString());
+		maxlengthz =  float.Parse(GUI.TextField(new Rect(370, 125, 30, 20),maxlengthz.ToString()));
 	  	
 	  	
 	  	
 	  	GUI.Label(new Rect (5, 175, 75, 20),"Drop Interval");	 	
 	  	dropinterval = GUI.HorizontalSlider (new Rect (100, 180, 115, 30), dropinterval, 0f, 10f);
-	  	GUI.Label(new Rect (220, 175, 50, 20),(dropinterval).ToString());
+		dropinterval =  float.Parse(GUI.TextField(new Rect(220, 175, 30, 20),dropinterval.ToString()));
+	  	//GUI.Label(new Rect (220, 175, 50, 20),(dropinterval).ToString());
+		
+		
+		
 	  	
 		normaldistribution = GUI.Toggle(new Rect(5, 200, 150, 30), normaldistribution, "Normal Distribution");
 	  	
 	  	GUI.Label(new Rect (5, 225, 75, 20),"Bag Alarmed");	 	
 	  	bagalarmed = GUI.HorizontalSlider (new Rect (100, 230, 115, 30), bagalarmed, 0f, 100f);
-	  	GUI.Label(new Rect (220, 225, 50, 20),(bagalarmed).ToString());
+		bagalarmed =  float.Parse(GUI.TextField(new Rect(220, 225, 30, 20),bagalarmed.ToString()));
+	  	//GUI.Label(new Rect (220, 225, 50, 20),(bagalarmed).ToString());
 		
 		GUI.Label(new Rect (5, 255, 75, 20),"Bag Error");	 	
 	  	bagerror = GUI.HorizontalSlider (new Rect (100, 260, 115, 30), bagerror, 0f, 100f);
-	  	GUI.Label(new Rect (220, 255, 50, 20),(bagerror).ToString());
+		bagerror =  float.Parse(GUI.TextField(new Rect(220, 255, 30, 20),bagerror.ToString()));
+	  	//GUI.Label(new Rect (220, 255, 50, 20),(bagerror).ToString());
 	  	
 	  	GUI.Label(new Rect (5, 285, 75, 20),"Bag Pending");	 	
 	  	bagpending = GUI.HorizontalSlider (new Rect (100, 290, 115, 30), bagpending, 0f, 100f);
-	  	GUI.Label(new Rect (220, 285, 50, 20),(bagpending).ToString());
+		bagpending =  float.Parse(GUI.TextField(new Rect(220, 285, 30, 20),bagpending.ToString()));
+	  	//GUI.Label(new Rect (220, 285, 50, 20),(bagpending).ToString());
 	  	
 	  	GUI.Label(new Rect (5, 315, 75, 20),"Bag Clear");	 	
 	  	bagclear = GUI.HorizontalSlider (new Rect (100, 320, 115, 30), bagclear, 0f, 100f);
-	  	GUI.Label(new Rect (220, 315, 50, 20),(bagclear).ToString());
+		bagclear =  float.Parse(GUI.TextField(new Rect(220, 315, 30, 20),bagclear.ToString()));
+	  	//GUI.Label(new Rect (220, 315, 50, 20),(bagclear).ToString());
 		
 	  	
 	  	//overridespeed = GUI.Toggle(new Rect(5, 35, 150, 30), overridespeed, "Override Speed");
@@ -165,7 +179,7 @@ public class DropBagsSettings : MonoBehaviour {
 			
 			//print(maxlengthx/10f);
 			cube.transform.position = new Vector3(startx, cube.transform.localScale.y/2 +starty, startz);
-			cube.transform.rotation = new Quaternion (0,startAngle,0,1);
+			cube.transform.Rotate(new Vector3(0f,startAngle,0f));
 			cube.AddComponent<Rigidbody>();
 			
 			
@@ -180,9 +194,20 @@ public class DropBagsSettings : MonoBehaviour {
 			cube.rigidbody.angularDrag = Mathf.Infinity;
 			cube.collider.material.dynamicFriction = 0;
 			cube.collider.material.staticFriction = 0;
+			//((BoxCollider)cube.collider).size = new Vector3 (1f,.5f,1f);//  (((BoxCollider)cube.collider).size.x,((BoxCollider)cube.collider).size.y*2f,((BoxCollider)cube.collider).size.z);  //transform.localScale = new Vector3(2f,2f,2f);
+			//((BoxCollider)cube.collider).center = new Vector3(0f,-0.25f,0f);
 			
 			cube.gameObject.AddComponent<Bag>();
-			cube.gameObject.AddComponent<DragRigidbody>();
+			cube.gameObject.AddComponent<BagDrag>();
+			
+			if(CommunicationMaster.IATA_tags.Count>0)
+			{
+				cube.gameObject.GetComponent<Bag>().setIATA(CommunicationMaster.IATA_tags[0].ToString());//CommunicationMaster.IATA_tags.  .ElementAt(0);
+				CommunicationMaster.IATA_tags.RemoveAt(0);
+			}
+			
+			cube.name = cube.gameObject.GetComponent<Bag>().getIATA() + " "+Random.Range(0,10000).ToString();
+						
 			
 			/*
 			float chosentype = Random.Range(0,bagalarmed+bagpending+bagerror+bagclear);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class conveyerForward : MonoBehaviour {
 	
+	
 	public float speed = 220; // speed
 	private float orig_speed_backup;
 	private int direction = 1; // direction
@@ -34,19 +35,36 @@ public class conveyerForward : MonoBehaviour {
 	private float static_friction = 0.2f;  //0.2f
 	private float dynamic_friction = 0.5f; // 0.5f
 	
+	private float uncatchangle = 0.5f;
+	
 	private List<GameObject> kinbags = new List<GameObject>();
 	
 		
 	// Use this for initialization
 	void Start () {
 		
-		
-		
 		orig_speed_backup = speed;
 		
 		windowID = Random.Range(0,100000);
 		windowRect= new Rect (50, 50, 200, 150);
-		this.setState(false);
+		if(override_speed)
+		{
+			//this.setState(true);						
+			if(speed<0.001)
+			{
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
+			}
+			else
+			{
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
+			}				
+			gameObject.renderer.material.color= Color.blue;			
+			
+		}else{
+			this.setState(false);			
+		}
 	}
 	
 	void setBeltColor()
@@ -66,8 +84,8 @@ public class conveyerForward : MonoBehaviour {
 			else
 			{
 				gameObject.renderer.material.color = Color.magenta;
-				gameObject.collider.material.staticFriction = static_friction;
-				gameObject.collider.material.dynamicFriction = dynamic_friction;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}
 			
 		}
@@ -86,8 +104,8 @@ public class conveyerForward : MonoBehaviour {
 			else
 			{
 				gameObject.renderer.material.color = Color.red;
-				gameObject.collider.material.staticFriction = static_friction;
-				gameObject.collider.material.dynamicFriction = dynamic_friction;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}	
 		}
 	}
@@ -143,8 +161,8 @@ public class conveyerForward : MonoBehaviour {
 		{
 			if(speed<0.001)
 			{
-				gameObject.collider.material.staticFriction = static_friction;
-				gameObject.collider.material.dynamicFriction = dynamic_friction;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}
 			else
 			{
@@ -176,13 +194,16 @@ public class conveyerForward : MonoBehaviour {
 		}
 	}
 	
-	void ReleaseKinematicBags(){
+	public void ReleaseKinematicBags(){
 		//if(((this.running||override_speed)&&excel_override==false)||(excel_override&&excel_val)){
 		//	return;
 		//}
 		foreach(GameObject rb in kinbags)
 		{
 			try{
+				if (rb == null) {
+					continue;
+				}
 				rb.rigidbody.isKinematic = false;	
 				rb.rigidbody.velocity = transform.right*.0001f;
 			}catch(UnityException exc)
@@ -196,6 +217,12 @@ public class conveyerForward : MonoBehaviour {
 	
 	void OnCollisionStay(Collision collision){
 	
+		
+		if(collision.gameObject.rigidbody.velocity.magnitude<.01f)
+		{
+			//Debug.Log("bagID:"+collision.gameObject.GetInstanceID()+" stopped");
+		}
+		
 		if(delete_bag)
 		{
 			Destroy(collision.gameObject);	
@@ -238,11 +265,12 @@ public class conveyerForward : MonoBehaviour {
 					
 					rigidbody.isKinematic = true;
 					kinbags.Add(collision.gameObject);
-					Debug.Log("in 0");
+//					Debug.Log("in 0");
 					
 					
 					return;
 				}
+				
 				
 				
 				// This section is responsible for attempting to constrain the y axis of the bag.
@@ -287,6 +315,23 @@ public class conveyerForward : MonoBehaviour {
 					
 			       rigidbody.velocity = direction*rigidbody.velocity.normalized/(Vector3.Dot(rigidbody.velocity.normalized,transform.right)*60/tempspeed);
 			   }
+				
+				//Debug.Log (gameObject.transform.rotation.z.ToString());  //gets important angle- depending on this angle,
+				// determine the required z and y rotations from this.
+				
+				
+					
+				if(!collision.gameObject.rigidbody.freezeRotation)
+				{
+					collision.gameObject.transform.Rotate(new Vector3(-rigidbody.velocity.normalized.z*ConveyorConstants.beltbagrotateback,0,rigidbody.velocity.normalized.x*ConveyorConstants.beltbagrotateback)  ,Space.World);	
+				}		
+					
+				//collision.gameObject.transform.Rotate(  ,Space.World);//new Vector3(uncatchangle,0f,0f),Space.World); // TODO, a command here could fix the catching boxes
+			}
+			else{
+				
+				
+				
 			}
 	    }
 	}

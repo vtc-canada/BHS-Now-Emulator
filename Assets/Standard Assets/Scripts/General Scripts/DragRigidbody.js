@@ -1,13 +1,12 @@
-var spring = 50.0;
-var damper = 5.0;
-var drag = 10.0;
+var spring = 1000.0;
+var damper = 1.0;
+var drag = 1000.0;
 var angularDrag = 5.0;
-var distance = 0.2;
+var distance = 0.0;
 var attachToCenterOfMass = false;
 
-private var springJoint : SpringJoint;
-
-    
+private var springJoint : SpringJoint;    
+private var lastbag: Rigidbody;
     
 function Update ()
 {
@@ -24,6 +23,8 @@ function Update ()
 	// We need to hit a rigidbody that is not kinematic
 	if (!hit.rigidbody || hit.rigidbody.isKinematic)
 		return;
+	
+	lastbag = hit.rigidbody;
 	
 	if (!springJoint)
 	{
@@ -51,6 +52,8 @@ function Update ()
 	springJoint.maxDistance = distance;
 	springJoint.connectedBody = hit.rigidbody;
 	
+	lastbag.freezeRotation = true;
+	
 	StartCoroutine ("DragObject", hit.distance);
 }
 
@@ -65,8 +68,10 @@ function DragObject (distance : float)
 	{
 		var ray = mainCamera.ScreenPointToRay (Input.mousePosition);
 		springJoint.transform.position = ray.GetPoint(distance);
+		lastbag.velocity = new Vector3(10f,0.0f,1f);
 		yield;
-	}
+	} 
+	lastbag.freezeRotation = false;
 	if (springJoint.connectedBody)
 	{
 		springJoint.connectedBody.drag = oldDrag;

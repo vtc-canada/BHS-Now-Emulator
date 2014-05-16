@@ -1,0 +1,2 @@
+2014-24-16 14:24:48 [INFO] STARTUP : 
+2014-24-16 14:24:50 [ERROR] Initialization : Unable to get IO data from mysqlconnection.dll. Check Database connectivity.

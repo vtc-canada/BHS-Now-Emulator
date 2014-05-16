@@ -10,16 +10,47 @@ public class Bag : MonoBehaviour {
 	private float prime_security_status_timer = 0;
 	private float falling_photoeye_delay = 0.2f;
 	
-	private bool one_click = false;
+	public bool one_click = false;
 	private bool timer_running;
 	private float timer_for_double_click;
 	private float delay =0.50f;
+	private int windowID=1;
+	private int GUIopen = 0;
+	private Rect windowRect;
+	
+	private string IATA_tag = "";
 
 	// Use this for initialization
 	void Start () {
+		windowID = Random.Range(0,100000);
+		windowRect= new Rect (50, 50, 400, 400);
 	
 	}
 	
+	void OnGUI(){
+		if(GUIopen==1)
+		{
+			windowRect = GUI.Window (windowID, windowRect, WindowFunction, "Bag ID: " + gameObject.GetInstanceID());
+		}
+	}
+	
+	void WindowFunction (int windowID) {
+	    if (GUI.Button (new Rect (270, 0,30, 30), "X")) {
+	    	GUIopen = 0;
+	  	}
+	}
+	
+	public void setIATA(string iata)
+	{
+		this.IATA_tag = iata;	
+	}
+	
+	public string getIATA()
+	{
+		return this.IATA_tag;
+	}
+	
+		
 	public void primeSecurityStatus(int set_status)
 	{
 		prime_security_status = set_status;
@@ -58,6 +89,7 @@ public class Bag : MonoBehaviour {
 	}
 	
 	void OnMouseOver(){
+		//Debug.Log(this.IATA_tag);
 		if(Input.GetMouseButtonDown(0))
 		{
 		   if(!one_click) // first click no previous clicks

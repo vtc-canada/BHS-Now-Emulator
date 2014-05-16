@@ -27,6 +27,7 @@ public class MergeConveyer : MonoBehaviour {
 	public string IO_name_estop_circuit = null;
 	public string IO_name_disconnect = null;
 	
+	private float uncatchangle = 0.5f;
 
 	void Start () {
 		orig_speed_backup = speed;
@@ -41,10 +42,14 @@ public class MergeConveyer : MonoBehaviour {
 			if(excel_val)
 			{
 				gameObject.renderer.material.color= Color.cyan;
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.magenta;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}			
 		}
 		else
@@ -52,10 +57,14 @@ public class MergeConveyer : MonoBehaviour {
 			if(this.running)
 			{
 				gameObject.renderer.material.color= Color.green;
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.red;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}	
 		}
 	}
@@ -99,6 +108,16 @@ public class MergeConveyer : MonoBehaviour {
 		disconnectstate = GUI.Toggle (new Rect (5, 95,115, 30),disconnectstate,"Disconnect State");
 		if(override_speed)
 		{
+			if(speed<0.001)
+			{
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
+			}
+			else
+			{
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
+			}
 			gameObject.renderer.material.color= Color.blue;
 		}else{
 			speed = orig_speed_backup;
@@ -150,7 +169,7 @@ public class MergeConveyer : MonoBehaviour {
 	    var rigidbody = collision.gameObject.rigidbody;
 	    var relativeposition = gameObject.transform.InverseTransformPoint(rigidbody.transform.position);
 	    
-	    Ray ray = new Ray (rigidbody.position, new Vector3(0,-1,0));
+	    Ray ray = new Ray (rigidbody.position, new Vector3(0f,-1f,0f));
 		RaycastHit hit;
 		if (Physics.Raycast (ray,out hit, 1)) {
 			//Debug.DrawLine (ray.origin, hit.point);
@@ -163,15 +182,17 @@ public class MergeConveyer : MonoBehaviour {
 					rigidbody.position = new Vector3(rigidbody.position.x,fixed_box_height_value + collision.transform.localScale.y/2,rigidbody.position.z);
 					rigidbody.constraints = RigidbodyConstraints.FreezePositionY;			
 				}
+				
+				
 				//get the magnitude of the velocity
 			    var rigidbodyspeed = rigidbody.velocity.magnitude;
 			    
 			    // adjust it's direction-  :
 				// 0* it's current direction
-				// +
+				// + 1 times where it should be going
 				// 1* toward the center of the belt.
 				// then normalized back to it's previous magnitude.
-			    rigidbody.velocity = (0*rigidbody.velocity.normalized + direction * transform.up + direction*transform.right*(gameObject.transform.InverseTransformPoint(rigidbody.transform.position).x+0.5f) ).normalized * rigidbodyspeed;
+			    rigidbody.velocity = (0*rigidbody.velocity.normalized + direction * transform.up -transform.right*(gameObject.transform.InverseTransformPoint(rigidbody.transform.position).x+0.5f) ).normalized * rigidbodyspeed;
 			  
 			   // if the bag is stopped, just set it exactly in the speed and direction it should be
 			   if(rigidbody.velocity.magnitude<0.01)
@@ -186,8 +207,16 @@ public class MergeConveyer : MonoBehaviour {
 			   {
 			       rigidbody.velocity = direction*rigidbody.velocity.normalized/(Vector3.Dot(rigidbody.velocity.normalized,transform.up)*60/tempspeed);
 			   }
+				
+				if(!collision.gameObject.rigidbody.freezeRotation)
+				{
+					collision.gameObject.transform.Rotate(new Vector3(-rigidbody.velocity.normalized.z*ConveyorConstants.beltbagrotateback,0,rigidbody.velocity.normalized.x*ConveyorConstants.beltbagrotateback)  ,Space.World)	;	
+				}
+				//collision.gameObject.transform.Rotate(new Vector3(uncatchangle,0f,0f)); // TODO, a command here could fix the catching boxes
 		    }
 	    }
+		else{
+		}
 	}
 
         

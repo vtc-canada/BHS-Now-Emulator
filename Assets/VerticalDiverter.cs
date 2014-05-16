@@ -61,6 +61,7 @@ public class VerticalDiverter : MonoBehaviour {
 					float deltaz = child.transform.localEulerAngles.z;
 					if(deltaz!=348f)
 					{				
+						child.transform.Find("Conveyor Belt").gameObject.GetComponent<conveyerForward>().ReleaseKinematicBags();
 						stateup = false;
 						statedown = false;
 						if(deltaz<=12f||deltaz>348f)
@@ -82,7 +83,8 @@ public class VerticalDiverter : MonoBehaviour {
 				{
 					float deltaz = child.transform.localEulerAngles.z;
 					if(deltaz!=12f)
-					{							
+					{			
+						child.transform.Find("Conveyor Belt").gameObject.GetComponent<conveyerForward>().ReleaseKinematicBags();
 						if(deltaz>300f||deltaz<12f)
 						{							
 							deltaz = child.transform.localEulerAngles.z +(24000f*Time.deltaTime/diverterperiod);
@@ -104,6 +106,7 @@ public class VerticalDiverter : MonoBehaviour {
 					float deltaz = child.transform.localEulerAngles.z;
 					if(deltaz!=12f)
 					{		
+						child.transform.Find("Conveyor Belt").gameObject.GetComponent<conveyerForward>().ReleaseKinematicBags();
 						stateup = false;
 						statedown = false;					
 						if(deltaz>300f||deltaz<12f)
@@ -125,7 +128,8 @@ public class VerticalDiverter : MonoBehaviour {
 				{
 					float deltaz = child.transform.localEulerAngles.z;
 					if(deltaz!=348f)
-					{							
+					{			
+						child.transform.Find("Conveyor Belt").gameObject.GetComponent<conveyerForward>().ReleaseKinematicBags();
 						if(deltaz<=12f||deltaz>348f)
 						{							
 							deltaz = child.transform.localEulerAngles.z -(24000f*Time.deltaTime/diverterperiod);

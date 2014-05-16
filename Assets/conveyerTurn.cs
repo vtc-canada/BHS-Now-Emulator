@@ -25,6 +25,7 @@ public class conveyerTurn : MonoBehaviour {
 	public string IO_name_estop_circuit = null;
 	public string IO_name_disconnect = null;
 	
+	private float uncatchangle = 0.5f;
 	
 	void Start () {
 		orig_speed_backup = speed;
@@ -40,10 +41,14 @@ public class conveyerTurn : MonoBehaviour {
 			if(excel_val)
 			{
 				gameObject.renderer.material.color= Color.cyan;
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.magenta;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}			
 		}
 		else
@@ -51,10 +56,14 @@ public class conveyerTurn : MonoBehaviour {
 			if(this.running)
 			{
 				gameObject.renderer.material.color= Color.green;
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
 			}
 			else
 			{
 				gameObject.renderer.material.color = Color.red;
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
 			}	
 		}
 	}
@@ -100,6 +109,16 @@ public class conveyerTurn : MonoBehaviour {
 		
 		if(override_speed)
 		{
+			if(speed<0.001)
+			{
+				gameObject.collider.material.staticFriction = ConveyorConstants.static_friction;
+				gameObject.collider.material.dynamicFriction = ConveyorConstants.dynamic_friction;
+			}
+			else
+			{
+				gameObject.collider.material.staticFriction = 0f;
+				gameObject.collider.material.dynamicFriction = 0f;
+			}
 			gameObject.renderer.material.color= Color.blue;
 		}else{
 			speed = orig_speed_backup;
@@ -160,6 +179,7 @@ public class conveyerTurn : MonoBehaviour {
 					    Vector3 xvec= new Vector3(0,0,0);
 					    Vector3 yvec= new Vector3(0,0,0);
 					    
+						
 					    //rigidbody.transform.position.
 					    if(turn_right){
 						    xvec = new Vector3(distancetocenter.z,0,0);
@@ -173,21 +193,34 @@ public class conveyerTurn : MonoBehaviour {
 					    // unit vector i want to be going.
 					    Vector3 directionitshouldbe = ( xvec+ yvec).normalized;
 					      
-					    
+					    //rigidbody.velocity = directionitshouldbe*tempspeed/60;
+						
+						
 					    // adjusts the velocity direction to what it should be.
-					    rigidbody.velocity = (1*rigidbody.velocity.normalized + directionitshouldbe).normalized *rigidbodyspeed;
+//					    rigidbody.velocity = (1*rigidbody.velocity.normalized + directionitshouldbe).normalized *rigidbodyspeed;
 					    //rigidbody.transform.Rotate(Vector3(0,1,0)*.02);
 					    			
 					    
 					    // If the velocity, period, is too slow, speed it up a bit.
-					    if(rigidbody.velocity.magnitude*60< tempspeed){
-					   		rigidbody.velocity = rigidbody.velocity + directionitshouldbe/5; //Accelleration Rate!          //3*conveyorVelocity * 
-					    }
-					    else if(rigidbody.velocity.magnitude*60> tempspeed){
+//					    if(rigidbody.velocity.magnitude*60< tempspeed){
+//					   		rigidbody.velocity = rigidbody.velocity + directionitshouldbe/5; //Accelleration Rate!          //3*conveyorVelocity * 
+//					    }
+//					    else if(rigidbody.velocity.magnitude*60> tempspeed){
 					   		rigidbody.velocity = directionitshouldbe*tempspeed/60;//rigidbody.velocity - directionitshouldbe/5; //Deccelleration Rate!          //3*conveyorVelocity * 
-					    }
+//					    }
+						
+						//collision.gameObject.transform.Rotate(new Vector3(uncatchangle,0f,0f)); // TODO, a command here could fix the catching boxes
+						if(!collision.gameObject.rigidbody.freezeRotation)
+						{
+							collision.gameObject.transform.Rotate(new Vector3(-rigidbody.velocity.normalized.z*ConveyorConstants.beltbagrotateback,0,rigidbody.velocity.normalized.x*ConveyorConstants.beltbagrotateback)  ,Space.World)	;	
+						}
 					}
 				}
+			}
+			else{
+				
+				
+				
 			}
 		}
 	}

@@ -33,7 +33,6 @@ public class DiverterLeftC : MonoBehaviour {
 	public void setState(bool diverteron)
 	{
 		this.diverteron = diverteron;
-		Debug.Log ("Diverter Set to "+diverteron.ToString()+"\r\n");
 	}
 	public bool getState()
 	{

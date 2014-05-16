@@ -44,15 +44,18 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ATRInput.cs" />
      <Compile Include="Assets\ArrowViews.cs" />
      <Compile Include="Assets\BMAInput.cs" />
      <Compile Include="Assets\Bag.cs" />
+     <Compile Include="Assets\BagDrag.cs" />
      <Compile Include="Assets\ClickDiverterSwitch.cs" />
      <Compile Include="Assets\ClickDiverterSwitchRight.cs" />
      <Compile Include="Assets\ClickDiverterSwitchVertical.cs" />
      <Compile Include="Assets\CommunicationMaster.cs" />
      <Compile Include="Assets\Control.cs" />
      <Compile Include="Assets\Control_station_button.cs" />
+     <Compile Include="Assets\ConveyorConstants.cs" />
      <Compile Include="Assets\DB.cs" />
      <Compile Include="Assets\DiverterLeftC.cs" />
      <Compile Include="Assets\DiverterReleaseBagHeight.cs" />
@@ -62,11 +65,13 @@
      <Compile Include="Assets\EDSDecision.cs" />
      <Compile Include="Assets\ForwardPusher.cs" />
      <Compile Include="Assets\JSONObject.cs" />
+     <Compile Include="Assets\Logger.cs" />
      <Compile Include="Assets\MergeConveyer.cs" />
      <Compile Include="Assets\MouseBagDropper.cs" />
      <Compile Include="Assets\MouseWASD.cs" />
      <Compile Include="Assets\Mousemovement.cs" />
      <Compile Include="Assets\NewBehaviourScript.cs" />
+     <Compile Include="Assets\ObjectLabel.cs" />
      <Compile Include="Assets\PhotoEye.cs" />
      <Compile Include="Assets\SimpleRNG.cs" />
      <Compile Include="Assets\UserConnection.cs" />

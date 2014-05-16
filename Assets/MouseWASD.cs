@@ -3,9 +3,9 @@ using System.Collections;
 
 public class MouseWASD : MonoBehaviour {
 	
-	private float mainSpeed = 100.0f; //regular speed
-	private float shiftAdd = 250.0f; //multiplied by how long shift is held.  Basically running
-	private float maxShift = 1000.0f; //Maximum speed when holdin gshift 
+	private float mainSpeed = 50.0f; //regular speed
+	private float shiftAdd = 150.0f; //multiplied by how long shift is held.  Basically running
+	private float maxShift = 600.0f; //Maximum speed when holdin gshift 
 	private float camSens = 0.25f; //How sensitive it with mouse
 	private Vector3 lastMouse = new Vector3(255f, 255f, 255f); //kind of in the middle of the screen, rather than at the top (play)
 	private float totalRun  = 1.0f; 
